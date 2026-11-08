@@ -59,6 +59,7 @@ function markActive(buttons, selectedButton) {
 }
 
 function displayForm(open) {
+  open = open && !state.hasAttribute("data-invalid");
   form.inert = !open;
   toggle.setAttribute("aria-expanded", String(open));
 }
@@ -99,8 +100,16 @@ function paintSource() {
 
 function paintPaper() {
   const work = resume.work?.[0];
-  const fields = { ...resume.basics, position: work?.position, company: work?.name };
   const text = value => typeof value === "string" ? value : "";
+  const start = text(work?.startDate).replaceAll("-", ".");
+  const end = text(work?.endDate).replaceAll("-", ".");
+  const fields = {
+    ...resume.basics,
+    position: work?.position,
+    company: work?.name,
+    range: start ? `${start} — ${end || "至今"}` : end,
+    skills: Array.isArray(resume.skills) ? resume.skills.map(skill => text(skill?.name)).filter(Boolean).join(" · ") : "",
+  };
   for (const field of paper.querySelectorAll("[data-resume-field]")) {
     field.textContent = text(fields[field.dataset.resumeField]);
   }
@@ -115,10 +124,13 @@ function readSource() {
     if (!next || typeof next !== "object" || Array.isArray(next)) throw new Error("Object required");
     resume = next;
     state.removeAttribute("data-invalid");
+    toggle.disabled = false;
     state.textContent = "网页演示 · 修改仅保存在本页";
     paintPaper();
   } catch {
     state.dataset.invalid = "";
+    toggle.disabled = true;
+    displayForm(false);
     state.textContent = "JSON 格式有误 · 保留上一次有效预览";
   }
 }

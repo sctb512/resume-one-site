@@ -102,7 +102,7 @@
                     <h4>工作经历</h4>
                     <button id="demo-edit-toggle" type="button" class="demo-work-row" aria-expanded="false" aria-controls="demo-form">
                       <span><strong data-resume-field="position">产品设计师</strong><span data-resume-field="company">知行科技</span></span>
-                      <span class="demo-date">2022.03 — 至今</span>
+                      <span class="demo-date" data-resume-field="range">2022.03 — 至今</span>
                     </button>
                     <div id="demo-form" class="demo-form" inert>
                       <label>职位<input id="demo-job" type="text" value="产品设计师" autocomplete="off" maxlength="60"></label>
@@ -111,7 +111,7 @@
                   </section>
                   <section class="demo-skills">
                     <h4>技能</h4>
-                    <p>交互设计 · 用户研究 · 无障碍</p>
+                    <p data-resume-field="skills">交互设计 · 用户研究 · 无障碍</p>
                   </section>
                 </article>
               </div>
@@ -132,7 +132,11 @@
       "startDate": "2022-03"
     }
   ],
-  "skills": [{ "name": "交互设计" }]
+  "skills": [
+    { "name": "交互设计" },
+    { "name": "用户研究" },
+    { "name": "无障碍" }
+  ]
 }</textarea>
                 </div>
               </div>
