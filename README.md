@@ -1,6 +1,6 @@
 # Resume One 简里项目主页
 
-这是简里的独立静态主页。纸白、青禾和墨序的预览来自应用 CLI 对仓库示例简历的实际 PDF 导出，网页只展示裁切后的首页图片。站点的显示字体是 Noto Serif SC 子集，许可位于 `site/assets/OFL-Jianli-Display.txt`。
+这是简里的独立静态主页。纸白、青禾和墨序的预览来自应用 CLI 对仓库示例简历的实际 PDF 导出，首屏展示这些首页节选。编辑体验区提供可修改的本地示例，覆盖 JSON/预览切换、纸面表单与主题试穿。站点的显示字体是 Noto Serif SC 子集，许可位于 `site/assets/OFL-Jianli-Display.txt`。
 
 ## 本地预览
 
