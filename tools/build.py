@@ -17,7 +17,7 @@ class Page(HTMLParser):
         super().__init__()
         self.ids = set()
         self.links = []
-        self.themes = []
+        self.themes = set()
         self.headings = 0
 
     def handle_starttag(self, tag, attrs):
@@ -33,8 +33,8 @@ class Page(HTMLParser):
         for attribute in ("href", "src", "data-animation"):
             if url := attrs.get(attribute):
                 self.links.append(url)
-        if tag == "button" and (theme := attrs.get("data-theme")):
-            self.themes.append(theme)
+        if tag == "button" and (theme := attrs.get("data-theme-choice")):
+            self.themes.add(theme)
 
 
 def check():
@@ -44,7 +44,7 @@ def check():
         raise ValueError("Expected a single homepage heading")
     css = (SOURCE / "site.css").read_text(encoding="utf-8")
     page.links.extend(re.findall(r'url\("([^"]+)"\)', css))
-    page.links.extend(f"assets/{theme}.webp" for theme in page.themes)
+    page.links.extend(f"assets/{theme}.webp" for theme in sorted(page.themes))
     for reference in page.links:
         url = urlsplit(reference)
         if url.netloc:

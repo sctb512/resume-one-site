@@ -1,37 +1,56 @@
 "use strict";
 
-const preview = document.querySelector(".preview-window");
+const root = document.documentElement;
 const sheet = document.querySelector("#preview-sheet");
 const caption = document.querySelector("#preview-theme");
 const status = document.querySelector("#preview-status");
-const choices = [...document.querySelectorAll(".theme-options button")];
-let selected = choices[0];
+const themeColor = document.querySelector('meta[name="theme-color"]');
+const themeChoices = [...document.querySelectorAll("[data-theme-choice]")];
+const themeNames = { zhibai: "知白", qinghe: "青禾", moxu: "墨序" };
+const themeColors = { zhibai: "#f6f3ea", qinghe: "#edf4e9", moxu: "#19282e" };
+const themeKey = "resume-one-site-theme";
+let selectedTheme = root.dataset.siteTheme;
 
-function show(choice) {
-  const theme = choice.dataset.theme;
-  const name = choice.textContent.trim();
-  preview.dataset.theme = theme;
-  sheet.src = `assets/${theme}.webp`;
-  sheet.alt = `林清和的示例简历，${name}主题的 PDF 首页节选`;
-  caption.textContent = name;
+function showTheme(theme) {
+  root.dataset.siteTheme = theme;
+  themeColor.content = themeColors[theme];
+  sheet.setAttribute("aria-label", `林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`);
+  caption.textContent = themeNames[theme];
 }
 
-for (const choice of choices) {
-  const preload = new Image();
-  preload.src = `assets/${choice.dataset.theme}.webp`;
-  choice.addEventListener("click", () => {
-    selected = choice;
-    for (const button of choices) button.setAttribute("aria-pressed", String(button === selected));
-    show(selected);
-    status.textContent = `已选择${selected.textContent.trim()}主题`;
+function syncThemeChoices() {
+  for (const button of themeChoices) {
+    button.setAttribute("aria-pressed", String(button.dataset.themeChoice === selectedTheme));
+  }
+}
+
+for (const button of themeChoices) {
+  const theme = button.dataset.themeChoice;
+  button.addEventListener("pointerenter", event => {
+    if (event.pointerType === "mouse") showTheme(theme);
   });
-  choice.addEventListener("pointerenter", (event) => {
-    if (event.pointerType === "mouse") show(choice);
+  button.addEventListener("pointerleave", event => {
+    if (event.pointerType === "mouse") showTheme(selectedTheme);
   });
-  choice.addEventListener("pointerleave", (event) => {
-    if (event.pointerType === "mouse") show(selected);
+  button.addEventListener("click", () => {
+    selectedTheme = theme;
+    syncThemeChoices();
+    showTheme(theme);
+    status.textContent = `已选择${themeNames[theme]}主题`;
+    try {
+      localStorage.setItem(themeKey, theme);
+    } catch {
+      // The choice remains active for the current page.
+    }
   });
 }
+syncThemeChoices();
+showTheme(selectedTheme);
+requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("theme-transitions")));
+window.addEventListener("pageshow", () => showTheme(selectedTheme));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && root.dataset.siteTheme !== selectedTheme) showTheme(selectedTheme);
+});
 
 const editor = document.querySelector(".demo-window");
 const paper = editor.querySelector("#demo-paper");
@@ -42,7 +61,6 @@ const guide = document.querySelector(".demo-guide");
 const note = document.querySelector("#demo-guide-note");
 const modeButtons = [...editor.querySelectorAll("[data-demo-mode]")];
 const steps = [...guide.querySelectorAll("[data-demo-step]")];
-const themes = [...editor.querySelectorAll("[data-demo-theme]")];
 const themeRail = editor.querySelector(".demo-theme-rail");
 const experience = editor.querySelector("#demo-experience");
 const toggle = editor.querySelector("#demo-edit-toggle");
@@ -51,7 +69,6 @@ const job = editor.querySelector("#demo-job");
 const company = editor.querySelector("#demo-company");
 const state = editor.querySelector("#demo-state");
 let resume = JSON.parse(source.value);
-let selectedTheme = themes[0];
 let pinned = false;
 
 function markActive(buttons, selectedButton) {
@@ -146,7 +163,7 @@ function writeWork(key, value) {
 const notes = {
   source: "编辑姓名、职位或机构，再切回预览看变化。桌面版使用 ⌘ / 或 Ctrl /，也支持 JSON Resume Schema 校验。",
   paper: "把鼠标移到工作经历上。表单淡入，移开后回到干净纸面。也可以点击工作经历打开表单。",
-  themes: "把鼠标移到纸白、青禾或墨序上。移开恢复已选主题，点击后才应用。",
+  themes: "把鼠标移到知白、青禾或墨序上。移开恢复已选主题，点击后才应用。",
 };
 
 for (const button of steps) {
@@ -159,7 +176,9 @@ for (const button of steps) {
       pinned = true;
       displayForm(true);
     }
-    if (step === "themes") selectedTheme.focus({ preventScroll: true });
+    if (step === "themes") {
+      themeRail.querySelector('[aria-pressed="true"]').focus({ preventScroll: true });
+    }
   });
 }
 for (const button of modeButtons) {
@@ -169,19 +188,6 @@ for (const button of modeButtons) {
     markActive(steps, steps.find(choice => choice.dataset.demoStep === step));
     note.textContent = notes[step];
     displayMode(mode);
-  });
-}
-for (const button of themes) {
-  button.addEventListener("pointerenter", event => {
-    if (event.pointerType === "mouse") editor.dataset.theme = button.dataset.demoTheme;
-  });
-  button.addEventListener("pointerleave", event => {
-    if (event.pointerType === "mouse") editor.dataset.theme = selectedTheme.dataset.demoTheme;
-  });
-  button.addEventListener("click", () => {
-    selectedTheme = button;
-    markActive(themes, button);
-    editor.dataset.theme = button.dataset.demoTheme;
   });
 }
 experience.addEventListener("pointerenter", event => {
@@ -244,4 +250,53 @@ if ("IntersectionObserver" in window) {
     }
   }, { threshold: 0.4 });
   observer.observe(motionImage);
+}
+
+
+const masthead = document.querySelector(".masthead");
+const progressBar = masthead.querySelector(".reading-progress");
+const chapters = [...masthead.querySelectorAll('nav a[href^="#"]')].map(link => ({
+  link,
+  section: document.querySelector(link.hash),
+}));
+let activeChapter;
+let scrollFrame = 0;
+
+function updateChapter() {
+  scrollFrame = 0;
+  const headerHeight = masthead.offsetHeight;
+  const threshold = Math.max(headerHeight + 48, Math.min(window.innerHeight * 0.3, headerHeight + 180));
+  const distance = root.scrollHeight - root.clientHeight;
+  let nextChapter;
+  for (const { link, section } of chapters) {
+    if (section.getBoundingClientRect().top <= threshold) nextChapter = link;
+  }
+  if (distance > 0 && distance - window.scrollY < 8) nextChapter = chapters.at(-1).link;
+  if (nextChapter !== activeChapter) {
+    activeChapter?.removeAttribute("aria-current");
+    nextChapter?.setAttribute("aria-current", "location");
+    activeChapter = nextChapter;
+  }
+  const fraction = distance > 0 ? window.scrollY / distance : 0;
+  progressBar.style.transform = `scaleX(${Math.max(0, Math.min(1, fraction))})`;
+}
+
+function scheduleChapterUpdate() {
+  if (!scrollFrame) scrollFrame = requestAnimationFrame(updateChapter);
+}
+
+window.addEventListener("scroll", scheduleChapterUpdate, { passive: true });
+window.addEventListener("resize", scheduleChapterUpdate);
+window.addEventListener("pageshow", scheduleChapterUpdate);
+scheduleChapterUpdate();
+
+if ("IntersectionObserver" in window && !reduceMotion.matches) {
+  const reveal = new IntersectionObserver(entries => {
+    for (const { target, isIntersecting } of entries) {
+      if (!isIntersecting) continue;
+      target.classList.add("revealed");
+      reveal.unobserve(target);
+    }
+  }, { rootMargin: "0px 0px -12% 0px", threshold: 0.03 });
+  for (const block of document.querySelectorAll("[data-reveal]")) reveal.observe(block);
 }
