@@ -218,3 +218,30 @@ company.addEventListener("input", () => writeWork("name", company.value));
 source.addEventListener("input", readSource);
 source.addEventListener("scroll", () => { highlight.scrollTop = source.scrollTop; });
 readSource();
+
+const motionImage = document.querySelector("#theme-motion-image");
+const motionToggle = document.querySelector("#theme-motion-toggle");
+const stillImage = motionImage.getAttribute("src");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let motionPlaying = false;
+
+function showThemeMotion(play) {
+  motionPlaying = play;
+  motionImage.src = play ? motionImage.dataset.animation : stillImage;
+  motionToggle.textContent = play ? "暂停动图" : "播放动图";
+}
+
+motionToggle.hidden = false;
+motionToggle.addEventListener("click", () => showThemeMotion(!motionPlaying));
+reduceMotion.addEventListener("change", ({ matches }) => {
+  if (matches) showThemeMotion(false);
+});
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      if (!reduceMotion.matches && !motionPlaying) showThemeMotion(true);
+      observer.disconnect();
+    }
+  }, { threshold: 0.4 });
+  observer.observe(motionImage);
+}

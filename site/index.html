@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="简里是 macOS 和 Windows 上的本地 JSON Resume 编辑器。编辑源码、在纸面修改、悬停试穿主题，再导出 PDF、DOCX、Markdown 或纯文本。">
-  <meta name="theme-color" content="#f5f2e9">
+  <meta name="theme-color" content="#f6f3ea">
   <title>Resume One 简里 · 本地 JSON Resume 编辑器</title>
   <link rel="icon" href="assets/seal.svg" type="image/svg+xml">
   <link rel="stylesheet" href="site.css">
@@ -21,6 +21,7 @@
       <a href="#editor">编辑体验</a>
       <a href="#themes">主题</a>
       <a href="#workflow">导出与 CLI</a>
+      <a href="#download">下载</a>
       <a href="https://github.com/sctb512/resume-one">GitHub</a>
     </nav>
   </header>
@@ -29,9 +30,9 @@
     <section class="hero" aria-labelledby="headline">
       <div class="hero-copy">
         <h1 id="headline"><span>把简历，</span><span>留在自己手里。</span></h1>
-        <p>简里是为 JSON Resume 设计的本地编辑器。查看源码、在纸面修改内容、试穿主题，再从同一份文件导出。</p>
+        <p>简里是一款本地简历编辑器。打开一份 JSON Resume，就能编辑源码、在纸面修改内容、试穿主题，再导出适合投递的版本。</p>
         <div class="hero-actions">
-          <a class="primary" href="https://github.com/sctb512/resume-one/releases">查看下载</a>
+          <a class="primary" href="#download">查看下载</a>
           <a class="text-link" href="#editor"><span>试用交互演示</span><span aria-hidden="true">↗</span></a>
         </div>
       </div>
@@ -44,25 +45,40 @@
           </div>
           <div class="workspace">
             <div class="theme-options" role="group" aria-label="切换简历主题">
-              <button type="button" data-theme="zhibai" aria-pressed="true" aria-controls="preview-sheet">纸白</button>
-              <button type="button" data-theme="qinghe" aria-pressed="false" aria-controls="preview-sheet">青禾</button>
-              <button type="button" data-theme="moxu" aria-pressed="false" aria-controls="preview-sheet">墨序</button>
+              <button type="button" data-theme="zhibai" aria-pressed="true" aria-controls="preview-sheet"><img src="assets/zhibai.webp" alt="" width="26" height="21" aria-hidden="true">知白</button>
+              <button type="button" data-theme="qinghe" aria-pressed="false" aria-controls="preview-sheet"><img src="assets/qinghe.webp" alt="" width="26" height="21" aria-hidden="true">青禾</button>
+              <button type="button" data-theme="moxu" aria-pressed="false" aria-controls="preview-sheet"><img src="assets/moxu.webp" alt="" width="26" height="21" aria-hidden="true">墨序</button>
             </div>
             <div class="sheet-mat">
               <img id="preview-sheet" src="assets/zhibai.webp" width="906" height="716"
-                   alt="林清和的示例简历，纸白主题的 PDF 首页节选" fetchpriority="high">
+                   alt="林清和的示例简历，知白主题的 PDF 首页节选" fetchpriority="high">
             </div>
           </div>
         </div>
-        <figcaption>内置示例 <span aria-hidden="true">·</span> <span id="preview-theme">纸白</span></figcaption>
+        <figcaption>内置示例 <span aria-hidden="true">·</span> <span id="preview-theme">知白</span></figcaption>
         <span id="preview-status" class="visually-hidden" role="status"></span>
       </figure>
     </section>
 
+    <ul class="proof-band" aria-label="简里概览">
+      <li>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18V7H11L9 5H3z M3 9h18"/></svg>
+        <div><strong>本地文件，自己掌控</strong><span>打开文件或目录，离线编辑和导出。</span></div>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H7a2 2 0 0 0-2 2v3a3 3 0 0 1-2 3 3 3 0 0 1 2 3v3a2 2 0 0 0 2 2h2m6-16h2a2 2 0 0 1 2 2v3a3 3 0 0 0 2 3 3 3 0 0 0-2 3v3a2 2 0 0 1-2 2h-2"/></svg>
+        <div><strong>基于 JSON Resume</strong><span>内容和样式分开，一份数据可以反复使用。</span></div>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17V5h16v12m-18 0h20v2H2z"/></svg>
+        <div><strong>macOS / Windows</strong><span>原生桌面应用，附独立命令行工具。</span></div>
+      </li>
+    </ul>
+
     <section id="editor" class="editor-demo" aria-labelledby="editor-title">
       <div class="editor-intro">
         <h2 id="editor-title">一份简历，两种视图</h2>
-        <p>按 <kbd>⌘ /</kbd> 或 <kbd>Ctrl /</kbd> 在源码与预览间切换。右侧模块栏留在原位，改过的内容随即出现在纸上。</p>
+        <p>按 <kbd>⌘ + /</kbd> 或 <kbd>Ctrl + /</kbd> 在源码与预览间切换。左侧主题栏随视图收放，右侧模块栏留在原位。</p>
         <div class="demo-guide" role="group" aria-label="选择演示">
           <button type="button" data-demo-step="source" aria-pressed="false">源码与预览</button>
           <button type="button" data-demo-step="paper" aria-pressed="true">纸面编辑</button>
@@ -84,7 +100,7 @@
           <div class="demo-workspace">
             <aside class="demo-theme-rail" aria-label="演示主题">
               <p class="demo-rail-title">主题</p>
-              <button type="button" data-demo-theme="zhibai" aria-pressed="true">纸白</button>
+              <button type="button" data-demo-theme="zhibai" aria-pressed="true">知白</button>
               <button type="button" data-demo-theme="qinghe" aria-pressed="false">青禾</button>
               <button type="button" data-demo-theme="moxu" aria-pressed="false">墨序</button>
             </aside>
@@ -155,41 +171,67 @@
     </section>
 
     <section id="themes" class="theme-story workflow" aria-labelledby="themes-title">
-      <div>
+      <header class="section-lead">
         <h2 id="themes-title">同一份内容，换一种版式</h2>
-        <p>鼠标掠过主题就能看到当前简历的样子。移开恢复已选主题，点击才应用。主题和简历分别保存，换版式时原始 JSON 保持干净。</p>
+        <p>把鼠标移到主题上，简里用当前简历试穿。移开恢复，点击才应用。内容、字体和配色可以各自调整。</p>
+      </header>
+      <figure class="theme-motion">
+        <img id="theme-motion-image" src="assets/theme-switch-poster.webp" data-animation="assets/theme-switch.gif"
+             width="960" height="574" loading="lazy"
+             alt="光标悬停青禾时纸面改变，移开恢复知白。点击墨序后移开，纸面保留墨序。">
+        <figcaption>
+          <span>悬停试穿 · 移开还原 · 点击应用</span>
+          <button type="button" id="theme-motion-toggle" aria-controls="theme-motion-image" hidden>播放动图</button>
+        </figcaption>
+      </figure>
+      <div class="theme-library">
+        <dl class="theme-types">
+          <div><dt>本地主题</dt><dd>内置 20 套原生排版。在线下载的主题也保存在你选择的本地目录，下载后可离线使用。</dd></div>
+          <div><dt>迁移版社区主题</dt><dd>67 套声明式适配，随包保留字体和许可。用简里的排版引擎渲染，可在纸面编辑。</dd></div>
+          <div><dt>原版 JSON Resume</dt><dd>保留已接入的上游模板和样式，用当前简历在本机渲染。预览和 PDF 需要 Chrome、Edge 或 Chromium。</dd></div>
+        </dl>
+        <p>两个在线目录来自同一个主题仓库。在「管理」可添加多个 GitHub 来源，并为每个来源设置展示名称。</p>
         <a class="text-link" href="https://github.com/sctb512/resume-one-themes"><span>浏览主题仓库</span><span aria-hidden="true">↗</span></a>
       </div>
-      <dl class="theme-types">
-        <div><dt>内置与本地</dt><dd>内置声明式主题可直接使用。自选本地目录，在线下载的主题也保存在这里。</dd></div>
-        <div><dt>原版 JSON Resume</dt><dd>直接复用已接入的上游模板和样式。在本机预览并导出 PDF，需要 Chrome、Edge 或 Chromium。</dd></div>
-        <div><dt>自己的主题源</dt><dd>默认提供公开主题目录。也可以添加多个 GitHub 来源，在同一列表里切换浏览。</dd></div>
-      </dl>
     </section>
 
-    <section id="workflow" class="workflow" aria-labelledby="workflow-title">
-      <h2 id="workflow-title">一份文件，三步完成</h2>
-      <ol class="steps">
-        <li>
-          <span class="step-number" aria-hidden="true">01</span>
-          <h3>打开 JSON</h3>
-          <p>打开 JSON 文件或目录。想在设备间同步，可选择自己的 iCloud Drive 或 OneDrive 目录。</p>
-        </li>
-        <li>
-          <span class="step-number" aria-hidden="true">02</span>
-          <h3>编辑与预览</h3>
-          <p>在源码里格式化、编辑和校验 JSON。用内置主题时，也可以在预览纸面增删模块和条目，操作可撤销。</p>
-        </li>
-        <li>
-          <span class="step-number" aria-hidden="true">03</span>
-          <h3>导出与复用</h3>
-          <p>导出 PDF、可编辑 DOCX、Markdown 或纯文本。也可以从 CLI 校验、编辑和导出，让脚本或 Agent 直接使用 JSON Resume。</p>
-        </li>
-      </ol>
-      <div class="command">
-        <span class="command-label">CLI</span>
-        <code>resume-one validate --file "$PWD/resume.json"</code>
-        <a class="text-link" href="https://github.com/sctb512/resume-one/blob/main/docs/cli-manual.md"><span>查看文档</span><span aria-hidden="true">↗</span></a>
+    <section id="workflow" class="workflow output-section" aria-labelledby="workflow-title">
+      <header class="section-lead">
+        <h2 id="workflow-title">一份简历，按需导出</h2>
+        <p>用标准 JSON 管理内容，投递时选合适的文件格式。</p>
+      </header>
+      <dl class="formats">
+        <div><dt>PDF</dt><dd>保留版式，适合投递和打印。</dd></div>
+        <div><dt>DOCX</dt><dd>保留可编辑文字，方便继续修改。</dd></div>
+        <div><dt>Markdown</dt><dd>便于复用到网站、文档和知识库。</dd></div>
+        <div><dt>纯文本</dt><dd>适合复制进招聘表单。</dd></div>
+      </dl>
+      <div class="cli-panel">
+        <div>
+          <h3>桌面写作，命令行复用</h3>
+          <p>用 CLI 校验、读取、打补丁和导出，接入脚本或 Agent。补丁可预演，也可用文件版本检查防止覆盖后来修改的内容。</p>
+        </div>
+        <div class="cli-example">
+          <pre aria-label="CLI 示例"><code><span aria-hidden="true">$ </span>resume-one validate --file "$PWD/resume.json" --json
+<span aria-hidden="true">$ </span>resume-one export --file "$PWD/resume.json" --format md --out "$PWD/resume.md"</code></pre>
+          <a class="text-link" href="https://github.com/sctb512/resume-one/blob/main/docs/cli-manual.md"><span>打开 CLI 手册</span><span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="download" class="workflow download-section" aria-labelledby="download-title">
+      <div>
+        <h2 id="download-title">把简里带到桌面</h2>
+        <p>可从 GitHub Releases 下载 macOS Apple Silicon 或 Windows x64 预发布包，解压后打开简里。压缩包内附 CLI、主题迁移工具和使用手册。</p>
+        <div class="hero-actions">
+          <a class="primary" href="https://github.com/sctb512/resume-one/releases">打开发布页</a>
+          <a class="text-link" href="https://github.com/sctb512/resume-one/blob/main/docs/user-manual.md"><span>阅读用户手册</span><span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="faq" aria-label="下载与使用常见问题">
+        <details><summary>简历文件放在哪里？</summary><p>由你决定。可以用普通本地目录，也可以选择 iCloud Drive 或 OneDrive 文件夹，由对应服务同步。应用内预览与导出都在本机完成。</p></details>
+        <details><summary>可以修改字体和配色吗？</summary><p>可以。在「外观」里悬停试用本机字体和颜色，确认后保存为个人设置。也可导入字体或从屏幕取色，简历 JSON 保持原样。</p></details>
+        <details><summary>原版主题也能在纸上编辑吗？</summary><p>原版纸面由上游模板渲染。可以用 JSON 编辑器和右侧模块栏更新内容。声明式主题还支持在纸面悬停唤出编辑表单。</p></details>
       </div>
     </section>
   </main>

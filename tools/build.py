@@ -28,9 +28,9 @@ class Page(HTMLParser):
             self.ids.add(identifier)
         if tag == "h1":
             self.headings += 1
-        if tag == "img" and not attrs.get("alt"):
+        if tag == "img" and not attrs.get("alt") and attrs.get("aria-hidden") != "true":
             raise ValueError("The sample needs meaningful alternative text")
-        for attribute in ("href", "src"):
+        for attribute in ("href", "src", "data-animation"):
             if url := attrs.get(attribute):
                 self.links.append(url)
         if tag == "button" and (theme := attrs.get("data-theme")):
