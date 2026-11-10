@@ -11,7 +11,9 @@ const themeColors = { zhibai: "#f6f3ea", qinghe: "#edf4e9", moxu: "#19282e" };
 const themeKey = "resume-one-site-theme";
 let selectedTheme = root.dataset.siteTheme;
 const themeSample = document.querySelector("#theme-sample");
+const sampleCaption = document.querySelector("#theme-sample-caption");
 const motionImage = document.querySelector("#theme-motion-image");
+const motionCaption = document.querySelector("#theme-motion-caption");
 const motionToggle = document.querySelector("#theme-motion-toggle");
 const stillImage = motionImage.getAttribute("src");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -21,6 +23,8 @@ function showThemeMotion(play) {
   motionImage.src = play ? motionImage.dataset.animation : stillImage;
   motionImage.hidden = !play;
   themeSample.hidden = play;
+  motionCaption.hidden = !play;
+  sampleCaption.hidden = play;
   motionToggle.setAttribute("aria-expanded", String(play));
   motionToggle.textContent = play ? "返回主题样张" : "播放切换演示";
 }
