@@ -16,27 +16,41 @@
     : /^mac/i.test(os) && navigator.maxTouchPoints < 2 ? "macos"
     : /^win/i.test(os) ? "windows"
     : null;
-  let preferred = downloads.find(download => download.platform === platform);
+  let preferred;
 
   function updateButton() {
     const href = preferred ? preferred.link.href : "#download";
     button.href = navLink.href = href;
-    button.textContent = preferred ? `下载 ${preferred.link.textContent}` : "查看下载";
+    button.textContent = preferred ? `下载 ${preferred.link.getAttribute("aria-label")}` : "选择下载版本";
     navLink.setAttribute("aria-label", button.textContent);
     platformPicker.hidden = !preferred;
   }
 
-  updateButton();
-  if (preferred && hints?.getHighEntropyValues) {
-    // Older browsers report the OS only. Keep the supported CPU in the label.
+  function selectArchitecture(architecture) {
+    preferred = downloads.find(download => download.platform === `${platform}-${architecture}`);
+    updateButton();
+  }
+
+  function legacyArchitecture() {
+    if (/\b(?:arm64|aarch64)\b/i.test(navigator.userAgent)) return "arm64";
+    if (platform === "windows" && /\b(?:Win64|WOW64|x64)\b/i.test(navigator.userAgent)) return "x64";
+    // Safari reports MacIntel even on Apple silicon.
+    return null;
+  }
+
+  if (platform && hints?.getHighEntropyValues) {
+    updateButton();
     hints.getHighEntropyValues(["architecture", "bitness", "wow64"]).then(cpu => {
-      const unsupported = platform === "macos" ? cpu.architecture === "x86"
-        : cpu.architecture === "arm" || (cpu.bitness === "32" && cpu.wow64 === false);
-      if (unsupported) {
-        preferred = undefined;
-        updateButton();
+      let architecture = legacyArchitecture();
+      if (cpu.architecture === "arm") {
+        architecture = cpu.bitness === "64" ? "arm64" : null;
+      } else if (cpu.architecture === "x86") {
+        architecture = cpu.bitness === "64" || cpu.wow64 === true ? "x64" : null;
       }
-    }).catch(() => {});
+      selectArchitecture(architecture);
+    }).catch(() => selectArchitecture(legacyArchitecture()));
+  } else {
+    selectArchitecture(legacyArchitecture());
   }
 
   const releaseBase = "https://github.com/sctb512/resume-one/releases/download/";
@@ -44,7 +58,7 @@
     credentials: "omit",
     signal: AbortSignal.timeout?.(4000),
   }).then(response => response.ok ? response.json() : []).then(releases => {
-    // Only promote a release when both packages are published. Retain the
+    // Only promote a release when every architecture is published. Retain the
     // checked-in links when the API is offline or rate-limited.
     const available = releases.filter(release =>
       !release.draft && /^v[\w.-]+$/.test(release.tag_name) &&
