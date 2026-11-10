@@ -2,6 +2,8 @@
 
 (() => {
   const button = document.querySelector("#hero-download");
+  const navLink = document.querySelector("#nav-download");
+  const platformPicker = document.querySelector(".hero-other-platforms");
   const downloads = [...document.querySelectorAll("[data-download]")].map(link => ({
     link,
     platform: link.dataset.download,
@@ -17,8 +19,11 @@
   let preferred = downloads.find(download => download.platform === platform);
 
   function updateButton() {
-    button.href = preferred ? preferred.link.href : "#download";
+    const href = preferred ? preferred.link.href : "#download";
+    button.href = navLink.href = href;
     button.textContent = preferred ? `下载 ${preferred.link.textContent}` : "查看下载";
+    navLink.setAttribute("aria-label", button.textContent);
+    platformPicker.hidden = !preferred;
   }
 
   updateButton();

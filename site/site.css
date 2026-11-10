@@ -156,6 +156,15 @@ h1 span { display: inline-block; }
   line-height: 1.65;
 }
 .hero .hero-actions { justify-content: center; margin-top: 1.6rem; }
+.hero-other-platforms {
+  display: inline-block;
+  margin-top: .7rem;
+  color: var(--muted);
+  font-size: .82rem;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+.hero-other-platforms[hidden] { display: none; }
 .hero-actions {
   display: flex;
   align-items: center;
