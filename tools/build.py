@@ -1,6 +1,7 @@
 """Validate local page references and copy the static site for GitHub Pages."""
 
 import argparse
+from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
 import re
@@ -68,6 +69,14 @@ def main():
     check()
     if args.out:
         shutil.copytree(SOURCE, args.out)
+        # Pages can serve fresh HTML alongside cached assets during a deploy.
+        # Change each asset URL whenever its contents change.
+        index = args.out / "index.html"
+        page = index.read_text(encoding="utf-8")
+        for attribute, name in (("href", "site.css"), ("src", "download.js"), ("src", "site.js")):
+            version = sha256((SOURCE / name).read_bytes()).hexdigest()[:12]
+            page = page.replace(f'{attribute}="{name}"', f'{attribute}="{name}?v={version}"')
+        index.write_text(page, encoding="utf-8")
 
 
 if __name__ == "__main__":
