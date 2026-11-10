@@ -14,6 +14,7 @@
     } catch {}
   </script>
   <link rel="stylesheet" href="site.css">
+  <link rel="preload" href="assets/jianli-display.woff2" as="font" type="font/woff2" crossorigin>
   <script src="download.js" defer></script>
   <script src="site.js" defer></script>
 </head>
@@ -44,7 +45,13 @@
         <h1 id="headline"><span>把简历，</span><span>留在自己手里。</span></h1>
         <p>在本机编辑 JSON Resume。改源码、在纸面写作、试穿主题，再从同一份简历导出。</p>
         <div class="hero-actions">
-          <a class="primary" id="hero-download" href="#download">下载简里</a>
+          <div class="hero-download-control">
+            <a class="primary" id="hero-download" href="#download">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.75v9m-3.5-3.5L10 12l3.5-3.75M3.5 12.75v3.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-3.5"/></svg>
+              <span>下载简里</span>
+            </a>
+            <div id="hero-download-choices" aria-label="选择下载版本" role="group" hidden></div>
+          </div>
           <a class="text-link" href="#editor"><span>试用交互演示</span><span aria-hidden="true">↗</span></a>
         </div>
         <a class="hero-other-platforms" href="#download" hidden>选择其他平台</a>
@@ -64,7 +71,7 @@
               <button type="button" data-theme-choice="moxu" aria-pressed="false" aria-controls="preview-sheet"><img src="assets/moxu.webp" alt="" width="26" height="21" aria-hidden="true">墨序</button>
             </div>
             <div class="sheet-mat">
-              <div id="preview-sheet" class="sample-sheet hero-sheet" role="img" data-theme-sample
+              <div id="preview-sheet" class="sample-sheet hero-sheet" role="img" data-theme-sample data-visible-theme="zhibai"
                    aria-label="林清和的示例简历，知白主题的 PDF 首页节选">
                 <img src="assets/zhibai.webp" data-sheet="zhibai" width="906" height="716" alt="" aria-hidden="true" fetchpriority="high">
                 <img src="assets/qinghe.webp" data-sheet="qinghe" width="906" height="716" alt="" aria-hidden="true" fetchpriority="low">
@@ -208,7 +215,7 @@
       </header>
       <figure class="theme-motion" data-reveal>
         <div class="theme-stage">
-          <div id="theme-sample" class="sample-sheet" role="img" data-theme-sample
+          <div id="theme-sample" class="sample-sheet" role="img" data-theme-sample data-visible-theme="zhibai"
                aria-label="林清和的示例简历，知白主题的 PDF 首页节选">
             <img src="assets/zhibai.webp" data-sheet="zhibai" width="906" height="716" alt="" aria-hidden="true">
             <img src="assets/qinghe.webp" data-sheet="qinghe" width="906" height="716" alt="" aria-hidden="true">
@@ -274,6 +281,7 @@
           <section aria-labelledby="macos-download-title">
             <h3 id="macos-download-title">macOS</h3>
             <div class="hero-actions">
+              <a class="primary" data-download="macos-universal" aria-label="macOS · 通用版" href="https://github.com/sctb512/resume-one/releases/download/v0.1.0-preview.7/Resume-One-macOS-universal-unsigned.zip">通用版</a>
               <a class="primary" data-download="macos-arm64" aria-label="macOS · Apple 芯片" href="https://github.com/sctb512/resume-one/releases/download/v0.1.0-preview.7/Resume-One-macOS-arm64-unsigned.zip">Apple 芯片</a>
               <a class="primary" data-download="macos-x64" aria-label="macOS · Intel" href="https://github.com/sctb512/resume-one/releases/download/v0.1.0-preview.7/Resume-One-macOS-x64-unsigned.zip">Intel</a>
             </div>

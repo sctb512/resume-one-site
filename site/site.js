@@ -17,6 +17,12 @@ const motionCaption = document.querySelector("#theme-motion-caption");
 const motionToggle = document.querySelector("#theme-motion-toggle");
 const stillImage = motionImage.getAttribute("src");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const decodedSamples = new Map();
+for (const theme of Object.keys(themeNames)) {
+  const images = [...document.querySelectorAll(`[data-sheet="${theme}"]`)];
+  const decoding = Promise.all(images.map(image => image.decode())).then(() => true, () => false);
+  decodedSamples.set(theme, decoding);
+}
 
 function showThemeMotion(play) {
   if (play === !motionImage.hidden) return;
@@ -35,10 +41,12 @@ reduceMotion.addEventListener("change", ({ matches }) => {
   if (matches) showThemeMotion(false);
 });
 
-function showTheme(theme) {
+async function showTheme(theme) {
   root.dataset.siteTheme = theme;
   themeColor.content = themeColors[theme];
+  if (!await decodedSamples.get(theme) || root.dataset.siteTheme !== theme) return;
   for (const sheet of themeSamples) {
+    sheet.dataset.visibleTheme = theme;
     sheet.setAttribute("aria-label", `林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`);
   }
   for (const caption of themeCaptions) caption.textContent = themeNames[theme];
@@ -75,7 +83,6 @@ for (const button of themeChoices) {
 }
 syncThemeChoices();
 showTheme(selectedTheme);
-requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("theme-transitions")));
 window.addEventListener("pageshow", () => showTheme(selectedTheme));
 document.addEventListener("keydown", event => {
   if (event.key === "Escape" && root.dataset.siteTheme !== selectedTheme) showTheme(selectedTheme);

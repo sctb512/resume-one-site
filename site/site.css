@@ -2,7 +2,7 @@
   font-family: "Jianli Display";
   src: url("assets/jianli-display.woff2") format("woff2");
   font-weight: 600;
-  font-display: swap;
+  font-display: optional;
 }
 
 @property --paper { syntax: "<color>"; inherits: true; initial-value: #f6f3ea; }
@@ -39,10 +39,6 @@
   --mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
   --ease-out: cubic-bezier(.22, .72, .24, 1);
   --header-space: 5rem;
-}
-:root.theme-transitions {
-  transition: --paper .38s ease, --ink .38s ease, --action .38s ease, --on-action .38s ease,
-    --seal .38s ease, --stage .38s ease, --doc-paper .38s ease, --cli-bg .38s ease;
 }
 :root[data-site-theme="qinghe"] {
   --paper: #edf4e9;
@@ -157,7 +153,43 @@ h1 span { display: inline-block; }
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   line-height: 1.65;
 }
-.hero .hero-actions { justify-content: center; margin-top: 1.6rem; }
+.hero .hero-actions { justify-content: center; gap: .6rem 1.5rem; margin-top: 1.6rem; }
+.hero-download-control { position: relative; }
+#hero-download {
+  min-width: 0;
+  min-height: 2.8rem;
+  gap: .52rem;
+  padding: .58rem .95rem;
+  border-radius: .46rem;
+  font: 650 1rem/1.3 var(--body);
+  transition: none;
+}
+#hero-download svg {
+  width: 1.13rem;
+  height: 1.13rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#hero-download-choices:not([hidden]) {
+  position: absolute;
+  z-index: 4;
+  top: calc(100% + .42rem);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  min-width: 11.75rem;
+  padding: .3rem;
+  border: 1px solid var(--rule);
+  border-radius: .45rem;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+#hero-download-choices a { text-align: left; padding: .44rem .64rem; border-radius: .25rem; text-decoration: none; white-space: nowrap; }
+#hero-download-choices a:is(:hover, :focus-visible) { background: var(--soft); }
+.hero .hero-actions > .text-link { font-size: 1rem; }
 .hero-other-platforms {
   display: inline-block;
   margin-top: .7rem;
@@ -278,11 +310,10 @@ h1 span { display: inline-block; }
   width: 100%;
   height: auto;
   opacity: 0;
-  transition: opacity .3s var(--ease-out);
 }
-:root[data-site-theme="zhibai"] [data-sheet="zhibai"],
-:root[data-site-theme="qinghe"] [data-sheet="qinghe"],
-:root[data-site-theme="moxu"] [data-sheet="moxu"] { opacity: 1; }
+[data-visible-theme="zhibai"] [data-sheet="zhibai"],
+[data-visible-theme="qinghe"] [data-sheet="qinghe"],
+[data-visible-theme="moxu"] [data-sheet="moxu"] { opacity: 1; }
 .preview figcaption { margin-top: .46rem; font-size: .81rem; color: var(--muted); }
 
 .workflow {
@@ -448,12 +479,8 @@ kbd { font-size: .9em; white-space: nowrap; }
 .demo-paper h4 { color: var(--doc-accent); font: 500 1.14em/1.45 var(--body); margin: 0 0 .44em; }
 
 /* The live excerpt follows the three built-in layouts shown by the PDF samples. */
-:root[data-site-theme="qinghe"] .demo-paper { line-height: 1.45; }
-:root[data-site-theme="qinghe"] .demo-paper h3 { font-family: var(--display); font-weight: 600; font-size: clamp(1.42rem, 2.12vw, 2rem); }
-:root[data-site-theme="qinghe"] .demo-paper h4 { font-family: var(--display); font-weight: 600; }
 :root[data-site-theme="qinghe"] .demo-resume-header { padding-bottom: 1.05em; border-bottom: 1px solid var(--doc-rule); }
 :root[data-site-theme="qinghe"] .demo-experience h4 { padding-bottom: .28em; border-bottom: 2px solid var(--doc-accent); }
-:root[data-site-theme="moxu"] .demo-paper { line-height: 1.39; }
 :root[data-site-theme="moxu"] .demo-resume-header {
   display: grid;
   grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
@@ -461,7 +488,6 @@ kbd { font-size: .9em; white-space: nowrap; }
   padding-bottom: 1.15em;
   border-bottom: 2px solid var(--doc-accent);
 }
-:root[data-site-theme="moxu"] .demo-paper h3 { font-size: clamp(1.38rem, 2vw, 1.87rem); }
 :root[data-site-theme="moxu"] .demo-paper h4 { padding-bottom: .28em; border-bottom: 1px solid var(--doc-rule); }
 :root[data-site-theme="moxu"] .demo-contact { text-align: right; }
 :root[data-site-theme="moxu"] .demo-contact span:not(:empty) { display: block; }
