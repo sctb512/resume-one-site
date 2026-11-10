@@ -21,13 +21,11 @@
   function updateButton() {
     const href = preferred ? preferred.link.href : "#download";
     button.href = navLink.href = href;
-    button.textContent = preferred ? `下载 ${preferred.link.getAttribute("aria-label")}` : "选择下载版本";
-    navLink.setAttribute("aria-label", button.textContent);
     platformPicker.hidden = !preferred;
   }
 
   function selectArchitecture(architecture) {
-    preferred = downloads.find(download => download.platform === `${platform}-${architecture}`);
+    preferred = downloads.find(download => download.platform === `${platform}-${architecture}`) ?? null;
     updateButton();
   }
 
@@ -39,16 +37,36 @@
   }
 
   if (platform && hints?.getHighEntropyValues) {
-    updateButton();
-    hints.getHighEntropyValues(["architecture", "bitness", "wow64"]).then(cpu => {
-      let architecture = legacyArchitecture();
+    const detected = Promise.resolve().then(() => hints.getHighEntropyValues(["architecture", "bitness", "wow64"])).then(cpu => {
       if (cpu.architecture === "arm") {
-        architecture = cpu.bitness === "64" ? "arm64" : null;
-      } else if (cpu.architecture === "x86") {
-        architecture = cpu.bitness === "64" || cpu.wow64 === true ? "x64" : null;
+        return cpu.bitness === "64" ? "arm64" : null;
       }
+      if (cpu.architecture === "x86") {
+        return cpu.bitness === "64" || cpu.wow64 === true ? "x64" : null;
+      }
+      return legacyArchitecture();
+    }).catch(legacyArchitecture);
+    let timeout;
+    const fallback = new Promise(resolve => {
+      timeout = setTimeout(() => resolve(legacyArchitecture()), 1000);
+    });
+    const recommendation = Promise.race([detected, fallback]).then(architecture => {
+      clearTimeout(timeout);
       selectArchitecture(architecture);
-    }).catch(() => selectArchitecture(legacyArchitecture()));
+    });
+
+    let downloadRequested = false;
+    for (const link of [button, navLink]) {
+      link.addEventListener("click", async event => {
+        if (preferred !== undefined || event.defaultPrevented || event.button !== 0 ||
+            event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        if (downloadRequested) return;
+        downloadRequested = true;
+        await recommendation;
+        window.location.assign(link.href);
+      });
+    }
   } else {
     selectArchitecture(legacyArchitecture());
   }

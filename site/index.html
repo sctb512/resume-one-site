@@ -64,7 +64,7 @@
               <button type="button" data-theme-choice="moxu" aria-pressed="false" aria-controls="preview-sheet"><img src="assets/moxu.webp" alt="" width="26" height="21" aria-hidden="true">墨序</button>
             </div>
             <div class="sheet-mat">
-              <div id="preview-sheet" class="hero-sheet" role="img"
+              <div id="preview-sheet" class="sample-sheet hero-sheet" role="img" data-theme-sample
                    aria-label="林清和的示例简历，知白主题的 PDF 首页节选">
                 <img src="assets/zhibai.webp" data-sheet="zhibai" width="906" height="716" alt="" aria-hidden="true" fetchpriority="high">
                 <img src="assets/qinghe.webp" data-sheet="qinghe" width="906" height="716" alt="" aria-hidden="true" fetchpriority="low">
@@ -81,7 +81,7 @@
             </div>
           </div>
         </div>
-        <figcaption>内置示例 <span aria-hidden="true">·</span> <span id="preview-theme">知白</span></figcaption>
+        <figcaption>内置示例 <span aria-hidden="true">·</span> <span data-theme-caption>知白</span></figcaption>
       </figure>
     </section>
 
@@ -126,34 +126,37 @@
             <div class="demo-workspace">
               <aside class="demo-theme-rail" aria-label="演示主题">
                 <p class="demo-rail-title">主题</p>
-                <button type="button" data-theme-choice="zhibai" aria-pressed="true">知白</button>
-                <button type="button" data-theme-choice="qinghe" aria-pressed="false">青禾</button>
-                <button type="button" data-theme-choice="moxu" aria-pressed="false">墨序</button>
+                <button type="button" data-theme-choice="zhibai" aria-pressed="true" aria-controls="demo-paper">知白</button>
+                <button type="button" data-theme-choice="qinghe" aria-pressed="false" aria-controls="demo-paper">青禾</button>
+                <button type="button" data-theme-choice="moxu" aria-pressed="false" aria-controls="demo-paper">墨序</button>
               </aside>
               <div class="demo-content">
                 <div id="demo-paper" class="demo-paper-view">
                   <article class="demo-paper" aria-label="示例简历预览">
-                    <h3 data-resume-field="name">林清和</h3>
-                    <p class="demo-position" data-resume-field="label">产品设计师</p>
-                    <p class="demo-contact" data-resume-field="email">linqinghe@example.com</p>
-                    <section>
-                      <h4>个人简介</h4>
-                      <p data-resume-field="summary">用调研和原型把复杂流程变得清楚。关注可访问性与跨端体验。</p>
-                    </section>
+                    <header class="demo-resume-header">
+                      <div>
+                        <h3 data-resume-field="name">林清和</h3>
+                        <p class="demo-position" data-resume-field="label">产品设计师 · Product Designer</p>
+                      </div>
+                      <p class="demo-contact"><span data-resume-field="email">hello@example.com</span><span data-resume-field="url">https://example.com</span><span data-resume-field="location">上海, CN</span></p>
+                    </header>
+                    <p class="demo-summary" data-resume-field="summary">专注于清晰、克制且有温度的体验设计。以用户研究连接产品策略与细节，擅长将复杂流程整理为自然、易用的工具。</p>
                     <section id="demo-experience" class="demo-experience">
                       <h4>工作经历</h4>
                       <button id="demo-edit-toggle" type="button" class="demo-work-row" aria-expanded="false" aria-controls="demo-form">
-                        <span><strong data-resume-field="position">产品设计师</strong><span data-resume-field="company">知行科技</span></span>
-                        <span class="demo-date" data-resume-field="range">2022.03 — 至今</span>
+                        <span class="demo-work-title"><span data-resume-field="position">高级产品设计师</span><span data-resume-field="company">示例工作室</span></span>
+                        <span class="demo-date" data-resume-field="range">2022-01</span>
                       </button>
+                      <p class="demo-work-summary" data-resume-field="workSummary">负责桌面效率工具从概念、原型到交付的完整体验。</p>
                       <div id="demo-form" class="demo-form" inert>
-                        <label>职位<input id="demo-job" type="text" value="产品设计师" autocomplete="off" maxlength="60"></label>
-                        <label>机构<input id="demo-company" type="text" value="知行科技" autocomplete="off" maxlength="60"></label>
+                        <label>职位<input id="demo-job" type="text" value="高级产品设计师" autocomplete="off" maxlength="60"></label>
+                        <label>机构<input id="demo-company" type="text" value="示例工作室" autocomplete="off" maxlength="60"></label>
                       </div>
                     </section>
                     <section class="demo-skills">
                       <h4>技能</h4>
-                      <p data-resume-field="skills">交互设计 · 用户研究 · 无障碍</p>
+                      <p data-resume-field="skillName">设计方法</p>
+                      <p class="demo-skill-keywords" data-resume-field="skillKeywords">用户研究 · 信息架构 · 交互设计</p>
                     </section>
                   </article>
                 </div>
@@ -163,21 +166,22 @@
                     <textarea id="demo-source" aria-label="示例简历 JSON" spellcheck="false" autocomplete="off" autocapitalize="off">{
     "basics": {
       "name": "林清和",
-      "label": "产品设计师",
-      "email": "linqinghe@example.com",
-      "summary": "用调研和原型把复杂流程变得清楚。关注可访问性与跨端体验。"
+      "label": "产品设计师 · Product Designer",
+      "email": "hello@example.com",
+      "url": "https://example.com",
+      "location": { "city": "上海", "countryCode": "CN" },
+      "summary": "专注于清晰、克制且有温度的体验设计。以用户研究连接产品策略与细节，擅长将复杂流程整理为自然、易用的工具。"
     },
     "work": [
       {
-        "name": "知行科技",
-        "position": "产品设计师",
-        "startDate": "2022-03"
+        "name": "示例工作室",
+        "position": "高级产品设计师",
+        "startDate": "2022-01",
+        "summary": "负责桌面效率工具从概念、原型到交付的完整体验。"
       }
     ],
     "skills": [
-      { "name": "交互设计" },
-      { "name": "用户研究" },
-      { "name": "无障碍" }
+      { "name": "设计方法", "keywords": ["用户研究", "信息架构", "交互设计"] }
     ]
   }</textarea>
                   </div>
@@ -192,7 +196,7 @@
             </div>
             <div class="demo-status" id="demo-state" role="status">网页演示 · 修改仅保存在本页</div>
           </div>
-          <figcaption>在浏览器试改一行 JSON，或把鼠标移到工作经历上。</figcaption>
+          <figcaption>网页版节选 · 在浏览器试改一行 JSON，或把鼠标移到工作经历上。</figcaption>
         </figure>
       </section>
     </div>
@@ -203,19 +207,27 @@
         <p>把鼠标移到主题上，简里用当前简历试穿。移开恢复，点击才应用。内容、字体和配色可以各自调整。</p>
       </header>
       <figure class="theme-motion" data-reveal>
-        <img id="theme-motion-image" src="assets/theme-switch-poster.webp" data-animation="assets/theme-switch.gif"
-             width="960" height="574" loading="lazy"
-             alt="光标悬停青禾时纸面改变，移开恢复知白。点击墨序后移开，纸面保留墨序。">
+        <div class="theme-stage">
+          <div id="theme-sample" class="sample-sheet" role="img" data-theme-sample
+               aria-label="林清和的示例简历，知白主题的 PDF 首页节选">
+            <img src="assets/zhibai.webp" data-sheet="zhibai" width="906" height="716" alt="" aria-hidden="true">
+            <img src="assets/qinghe.webp" data-sheet="qinghe" width="906" height="716" alt="" aria-hidden="true">
+            <img src="assets/moxu.webp" data-sheet="moxu" width="906" height="716" alt="" aria-hidden="true">
+          </div>
+          <img id="theme-motion-image" src="assets/theme-switch-poster.webp" data-animation="assets/theme-switch.gif"
+               width="960" height="574" loading="lazy" hidden
+               alt="光标悬停青禾时纸面改变，移开恢复知白。点击墨序后移开，纸面保留墨序。">
+        </div>
         <figcaption>
-          <span>悬停试穿 · 移开还原 · 点击应用</span>
-          <button type="button" id="theme-motion-toggle" aria-controls="theme-motion-image" hidden>播放动图</button>
+          <span>实际导出节选 <span aria-hidden="true">·</span> <span data-theme-caption>知白</span></span>
+          <button type="button" id="theme-motion-toggle" aria-controls="theme-motion-image" aria-expanded="false" hidden>播放切换演示</button>
         </figcaption>
       </figure>
       <div class="theme-library" data-reveal>
         <div class="site-theme-choices" role="group" aria-label="切换网站与简历主题">
-          <button type="button" data-theme-choice="zhibai" aria-pressed="true">知白</button>
-          <button type="button" data-theme-choice="qinghe" aria-pressed="false">青禾</button>
-          <button type="button" data-theme-choice="moxu" aria-pressed="false">墨序</button>
+          <button type="button" data-theme-choice="zhibai" aria-pressed="true" aria-controls="theme-sample">知白</button>
+          <button type="button" data-theme-choice="qinghe" aria-pressed="false" aria-controls="theme-sample">青禾</button>
+          <button type="button" data-theme-choice="moxu" aria-pressed="false" aria-controls="theme-sample">墨序</button>
         </div>
         <dl class="theme-types">
           <div><dt>本地主题</dt><dd>内置 20 套原生排版。在线下载的主题也保存在你选择的本地目录，下载后可离线使用。</dd></div>

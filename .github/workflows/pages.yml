@@ -21,6 +21,7 @@ jobs:
         with:
           persist-credentials: false
       - run: node --check site/site.js
+      - run: node --check site/download.js
       - run: python3 tools/build.py --out dist
       - uses: actions/upload-pages-artifact@v4
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

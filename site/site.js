@@ -1,8 +1,8 @@
 "use strict";
 
 const root = document.documentElement;
-const sheet = document.querySelector("#preview-sheet");
-const caption = document.querySelector("#preview-theme");
+const themeSamples = document.querySelectorAll("[data-theme-sample]");
+const themeCaptions = document.querySelectorAll("[data-theme-caption]");
 const status = document.querySelector("#preview-status");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeChoices = [...document.querySelectorAll("[data-theme-choice]")];
@@ -10,12 +10,34 @@ const themeNames = { zhibai: "知白", qinghe: "青禾", moxu: "墨序" };
 const themeColors = { zhibai: "#f6f3ea", qinghe: "#edf4e9", moxu: "#19282e" };
 const themeKey = "resume-one-site-theme";
 let selectedTheme = root.dataset.siteTheme;
+const themeSample = document.querySelector("#theme-sample");
+const motionImage = document.querySelector("#theme-motion-image");
+const motionToggle = document.querySelector("#theme-motion-toggle");
+const stillImage = motionImage.getAttribute("src");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function showThemeMotion(play) {
+  if (play === !motionImage.hidden) return;
+  motionImage.src = play ? motionImage.dataset.animation : stillImage;
+  motionImage.hidden = !play;
+  themeSample.hidden = play;
+  motionToggle.setAttribute("aria-expanded", String(play));
+  motionToggle.textContent = play ? "返回主题样张" : "播放切换演示";
+}
+
+motionToggle.hidden = false;
+motionToggle.addEventListener("click", () => showThemeMotion(motionImage.hidden));
+reduceMotion.addEventListener("change", ({ matches }) => {
+  if (matches) showThemeMotion(false);
+});
 
 function showTheme(theme) {
   root.dataset.siteTheme = theme;
   themeColor.content = themeColors[theme];
-  sheet.setAttribute("aria-label", `林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`);
-  caption.textContent = themeNames[theme];
+  for (const sheet of themeSamples) {
+    sheet.setAttribute("aria-label", `林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`);
+  }
+  for (const caption of themeCaptions) caption.textContent = themeNames[theme];
 }
 
 function syncThemeChoices() {
@@ -27,7 +49,9 @@ function syncThemeChoices() {
 for (const button of themeChoices) {
   const theme = button.dataset.themeChoice;
   button.addEventListener("pointerenter", event => {
-    if (event.pointerType === "mouse") showTheme(theme);
+    if (event.pointerType !== "mouse") return;
+    showThemeMotion(false);
+    showTheme(theme);
   });
   button.addEventListener("pointerleave", event => {
     if (event.pointerType === "mouse") showTheme(selectedTheme);
@@ -35,6 +59,7 @@ for (const button of themeChoices) {
   button.addEventListener("click", () => {
     selectedTheme = theme;
     syncThemeChoices();
+    showThemeMotion(false);
     showTheme(theme);
     status.textContent = `已选择${themeNames[theme]}主题`;
     try {
@@ -116,16 +141,20 @@ function paintSource() {
 }
 
 function paintPaper() {
+  const basics = resume.basics;
   const work = resume.work?.[0];
+  const skill = resume.skills?.[0];
   const text = value => typeof value === "string" ? value : "";
-  const start = text(work?.startDate).replaceAll("-", ".");
-  const end = text(work?.endDate).replaceAll("-", ".");
+  const join = (values, separator) => values.map(text).filter(Boolean).join(separator);
   const fields = {
-    ...resume.basics,
+    ...basics,
+    location: join([basics?.location?.city, basics?.location?.countryCode], ", "),
     position: work?.position,
     company: work?.name,
-    range: start ? `${start} — ${end || "至今"}` : end,
-    skills: Array.isArray(resume.skills) ? resume.skills.map(skill => text(skill?.name)).filter(Boolean).join(" · ") : "",
+    range: join([work?.startDate, work?.endDate], " – "),
+    workSummary: work?.summary,
+    skillName: skill?.name,
+    skillKeywords: Array.isArray(skill?.keywords) ? join(skill.keywords, " · ") : "",
   };
   for (const field of paper.querySelectorAll("[data-resume-field]")) {
     field.textContent = text(fields[field.dataset.resumeField]);
@@ -225,39 +254,11 @@ source.addEventListener("input", readSource);
 source.addEventListener("scroll", () => { highlight.scrollTop = source.scrollTop; });
 readSource();
 
-const motionImage = document.querySelector("#theme-motion-image");
-const motionToggle = document.querySelector("#theme-motion-toggle");
-const stillImage = motionImage.getAttribute("src");
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-let motionPlaying = false;
-
-function showThemeMotion(play) {
-  motionPlaying = play;
-  motionImage.src = play ? motionImage.dataset.animation : stillImage;
-  motionToggle.textContent = play ? "暂停动图" : "播放动图";
-}
-
-motionToggle.hidden = false;
-motionToggle.addEventListener("click", () => showThemeMotion(!motionPlaying));
-reduceMotion.addEventListener("change", ({ matches }) => {
-  if (matches) showThemeMotion(false);
-});
-if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      if (!reduceMotion.matches && !motionPlaying) showThemeMotion(true);
-      observer.disconnect();
-    }
-  }, { threshold: 0.4 });
-  observer.observe(motionImage);
-}
-
-
 const masthead = document.querySelector(".masthead");
 const progressBar = masthead.querySelector(".reading-progress");
-const chapters = [...masthead.querySelectorAll('nav a[href^="#"]')].map(link => ({
+const chapters = [...masthead.querySelectorAll('nav a[href^="#"], #nav-download')].map(link => ({
   link,
-  section: document.querySelector(link.hash),
+  section: document.querySelector(link.id === "nav-download" ? "#download" : link.hash),
 }));
 let activeChapter;
 let scrollFrame = 0;
