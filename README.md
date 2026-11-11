@@ -4,9 +4,12 @@
 
 首页的「下载简里」会根据浏览器提供的系统和处理器信息直接下载对应版本。无法区分 Mac 处理器时下载通用版。无法匹配平台时在按钮旁选择版本。
 
+首页会根据浏览器首选语言打开简体中文或英文。可在页脚选择「跟随浏览器」「简体中文」或「English」，偏好在浏览器中保留。两个语言页面使用独立的示例 JSON 和同版本的真实 PDF 节选。
+
 ## 本地预览
 
 ```sh
+node --check site/language.js
 node --check site/site.js
 node --check site/download.js
 python3 tools/build.py

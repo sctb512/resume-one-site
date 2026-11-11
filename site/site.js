@@ -6,7 +6,11 @@ const themeCaptions = document.querySelectorAll("[data-theme-caption]");
 const status = document.querySelector("#preview-status");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeChoices = [...document.querySelectorAll("[data-theme-choice]")];
-const themeNames = { zhibai: "知白", qinghe: "青禾", moxu: "墨序" };
+const english = root.lang === "en";
+const tr = (zh, en) => english ? en : zh;
+const themeNames = english
+  ? { zhibai: "White Space", qinghe: "Green Grain", moxu: "Ink Ledger" }
+  : { zhibai: "知白", qinghe: "青禾", moxu: "墨序" };
 const themeColors = { zhibai: "#f6f3ea", qinghe: "#edf4e9", moxu: "#19282e" };
 const themeKey = "resume-one-site-theme";
 let selectedTheme = root.dataset.siteTheme;
@@ -32,7 +36,7 @@ function showThemeMotion(play) {
   motionCaption.hidden = !play;
   sampleCaption.hidden = play;
   motionToggle.setAttribute("aria-expanded", String(play));
-  motionToggle.textContent = play ? "返回主题样张" : "播放切换演示";
+  motionToggle.textContent = play ? tr("返回主题样张", "Back to theme samples") : tr("播放切换演示", "Play theme walkthrough");
 }
 
 motionToggle.hidden = false;
@@ -47,7 +51,8 @@ async function showTheme(theme) {
   if (!await decodedSamples.get(theme) || root.dataset.siteTheme !== theme) return;
   for (const sheet of themeSamples) {
     sheet.dataset.visibleTheme = theme;
-    sheet.setAttribute("aria-label", `林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`);
+    sheet.setAttribute("aria-label", tr(`林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`,
+      `Alex Morgan’s sample résumé, from the first PDF page in the ${themeNames[theme]} theme`));
   }
   for (const caption of themeCaptions) caption.textContent = themeNames[theme];
 }
@@ -73,7 +78,7 @@ for (const button of themeChoices) {
     syncThemeChoices();
     showThemeMotion(false);
     showTheme(theme);
-    status.textContent = `已选择${themeNames[theme]}主题`;
+    status.textContent = tr(`已选择${themeNames[theme]}主题`, `${themeNames[theme]} applied`);
     try {
       localStorage.setItem(themeKey, theme);
     } catch {
@@ -182,13 +187,13 @@ function readSource() {
     resume = next;
     state.removeAttribute("data-invalid");
     toggle.disabled = false;
-    state.textContent = "网页演示 · 修改仅保存在本页";
+    state.textContent = tr("网页演示 · 修改仅保存在本页", "Web demo · Changes stay on this page");
     paintPaper();
   } catch {
     state.dataset.invalid = "";
     toggle.disabled = true;
     displayForm(false);
-    state.textContent = "JSON 格式有误 · 保留上一次有效预览";
+    state.textContent = tr("JSON 格式有误 · 保留上一次有效预览", "Invalid JSON · Showing the last valid preview");
   }
 }
 
@@ -201,9 +206,9 @@ function writeWork(key, value) {
 }
 
 const notes = {
-  source: "编辑姓名、职位或机构，再切回预览看变化。桌面版使用 ⌘ / 或 Ctrl /，也支持 JSON Resume Schema 校验。",
-  paper: "把鼠标移到工作经历上。表单淡入，移开后回到干净纸面。也可以点击工作经历打开表单。",
-  themes: "把鼠标移到知白、青禾或墨序上。移开恢复已选主题，点击后才应用。",
+  source: tr("编辑姓名、职位或机构，再切回预览看变化。桌面版使用 ⌘ / 或 Ctrl /，也支持 JSON Resume Schema 校验。", "Edit the name, position or company, then switch back to preview. The desktop app supports ⌘ / or Ctrl / and validates against JSON Resume Schema."),
+  paper: tr("把鼠标移到工作经历上。表单淡入，移开后回到干净纸面。也可以点击工作经历打开表单。", "Hover over Experience to reveal the form. Move away to return to the page, or click an entry to open the form."),
+  themes: tr("把鼠标移到知白、青禾或墨序上。移开恢复已选主题，点击后才应用。", "Hover over White Space, Green Grain or Ink Ledger. Move away to restore the selected theme, or click to keep it."),
 };
 
 for (const button of steps) {
