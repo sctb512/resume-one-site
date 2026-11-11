@@ -14,6 +14,7 @@ const themeNames = english
 const themeColors = { zhibai: "#f6f3ea", qinghe: "#edf4e9", moxu: "#19282e" };
 const themeKey = "resume-one-site-theme";
 let selectedTheme = root.dataset.siteTheme;
+let requestedTheme = selectedTheme;
 const themeSample = document.querySelector("#theme-sample");
 const sampleCaption = document.querySelector("#theme-sample-caption");
 const motionImage = document.querySelector("#theme-motion-image");
@@ -46,9 +47,10 @@ reduceMotion.addEventListener("change", ({ matches }) => {
 });
 
 async function showTheme(theme) {
+  requestedTheme = theme;
+  if (!await decodedSamples.get(theme) || requestedTheme !== theme) return;
   root.dataset.siteTheme = theme;
   themeColor.content = themeColors[theme];
-  if (!await decodedSamples.get(theme) || root.dataset.siteTheme !== theme) return;
   for (const sheet of themeSamples) {
     sheet.dataset.visibleTheme = theme;
     sheet.setAttribute("aria-label", tr(`林清和的示例简历，${themeNames[theme]}主题的 PDF 首页节选`,
@@ -90,7 +92,7 @@ syncThemeChoices();
 showTheme(selectedTheme);
 window.addEventListener("pageshow", () => showTheme(selectedTheme));
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && root.dataset.siteTheme !== selectedTheme) showTheme(selectedTheme);
+  if (event.key === "Escape" && requestedTheme !== selectedTheme) showTheme(selectedTheme);
 });
 
 const editor = document.querySelector(".demo-window");
@@ -207,7 +209,7 @@ function writeWork(key, value) {
 
 const notes = {
   source: tr("编辑姓名、职位或机构，再切回预览看变化。桌面版使用 ⌘ / 或 Ctrl /，也支持 JSON Resume Schema 校验。", "Edit the name, position or company, then switch back to preview. The desktop app supports ⌘ / or Ctrl / and validates against JSON Resume Schema."),
-  paper: tr("把鼠标移到工作经历上。表单淡入，移开后回到干净纸面。也可以点击工作经历打开表单。", "Hover over Experience to reveal the form. Move away to return to the page, or click an entry to open the form."),
+  paper: tr("把鼠标移到工作经历上。表单淡入，移开后回到干净纸面。也可以点击工作经历打开表单。", "Hover over Experience or tap an entry to edit it. Move away to return to the preview."),
   themes: tr("把鼠标移到知白、青禾或墨序上。移开恢复已选主题，点击后才应用。", "Hover over White Space, Green Grain or Ink Ledger. Move away to restore the selected theme, or click to keep it."),
 };
 
@@ -277,11 +279,16 @@ const chapters = [...masthead.querySelectorAll('nav a[href^="#"], #nav-download'
   section: document.querySelector(link.id === "nav-download" ? "#download" : link.hash),
 }));
 let activeChapter;
+let lastHeaderHeight = 0;
 let scrollFrame = 0;
 
 function updateChapter() {
   scrollFrame = 0;
   const headerHeight = masthead.offsetHeight;
+  if (headerHeight !== lastHeaderHeight) {
+    root.style.setProperty("--header-space", `${headerHeight + 12}px`);
+    lastHeaderHeight = headerHeight;
+  }
   const threshold = Math.max(headerHeight + 48, Math.min(window.innerHeight * 0.3, headerHeight + 180));
   const distance = root.scrollHeight - root.clientHeight;
   let nextChapter;
@@ -305,6 +312,7 @@ function scheduleChapterUpdate() {
 window.addEventListener("scroll", scheduleChapterUpdate, { passive: true });
 window.addEventListener("resize", scheduleChapterUpdate);
 window.addEventListener("pageshow", scheduleChapterUpdate);
+if ("ResizeObserver" in window) new ResizeObserver(scheduleChapterUpdate).observe(masthead);
 scheduleChapterUpdate();
 
 if ("IntersectionObserver" in window && !reduceMotion.matches) {

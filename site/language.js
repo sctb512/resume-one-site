@@ -10,7 +10,7 @@
     const saved = localStorage.getItem(key);
     if (supported.has(saved)) preference = saved;
   } catch {
-    // The language links still work if browser storage is disabled.
+    // Language choices can still be carried in the URL.
   }
 
   const explicit = new URL(location.href).searchParams.get("lang");
@@ -43,16 +43,22 @@
   if (current !== initial) go(initial, true, isSupported(explicit));
 
   document.addEventListener("DOMContentLoaded", () => {
-    const picker = document.querySelector("#site-language");
-    picker.value = isSupported(explicit) ? explicit : preference;
-    picker.addEventListener("change", () => {
-      preference = picker.value;
-      let saved = false;
-      try {
-        localStorage.setItem(key, preference);
-        saved = true;
-      } catch {}
-      go(preference === "auto" ? browserLanguage() : preference, false, !saved);
-    });
+    const pickers = [...document.querySelectorAll("[data-language-picker]")];
+    const syncPickers = value => {
+      for (const picker of pickers) picker.value = value;
+    };
+    syncPickers(isSupported(explicit) ? explicit : preference);
+    for (const picker of pickers) {
+      picker.addEventListener("change", () => {
+        preference = picker.value;
+        syncPickers(preference);
+        let saved = false;
+        try {
+          localStorage.setItem(key, preference);
+          saved = true;
+        } catch {}
+        go(preference === "auto" ? browserLanguage() : preference, false, !saved);
+      });
+    }
   });
 })();
