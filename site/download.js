@@ -4,7 +4,6 @@
   const button = document.querySelector("#hero-download");
   const navLink = document.querySelector("#nav-download");
   const platformPicker = document.querySelector(".hero-other-platforms");
-  const choices = document.querySelector("#hero-download-choices");
   const downloads = [...document.querySelectorAll("[data-download]")].map(link => ({
     link,
     platform: link.dataset.download,
@@ -28,40 +27,12 @@
       else link.removeAttribute("download");
     }
     platformPicker.hidden = !preferred;
-    if (preferred) {
-      hideChoices();
-      button.removeAttribute("aria-controls");
-      button.removeAttribute("aria-expanded");
-    } else {
-      button.setAttribute("aria-controls", choices.id);
-      button.setAttribute("aria-expanded", String(!choices.hidden));
-    }
   }
 
   function selectArchitecture(architecture) {
     preferred = downloads.find(download => download.platform === `${platform}-${architecture}`)
       ?? (platform === "macos" ? universal : null);
     updateButton();
-  }
-
-  function hideChoices() {
-    choices.hidden = true;
-    if (!preferred) button.setAttribute("aria-expanded", "false");
-  }
-
-  function showChoices() {
-    const options = downloads.filter(item => item.platform === "macos-universal" || item.platform.startsWith("windows-"));
-    choices.replaceChildren(...options.map(item => {
-      const link = document.createElement("a");
-      link.href = item.link.href;
-      link.download = item.filename;
-      link.textContent = item.link.getAttribute("aria-label");
-      link.addEventListener("click", () => { hideChoices(); button.focus(); });
-      return link;
-    }));
-    choices.hidden = false;
-    button.setAttribute("aria-expanded", "true");
-    choices.querySelector("a")?.focus();
   }
 
   function legacyArchitecture() {
@@ -95,30 +66,15 @@
 
   let downloadRequested = false;
   button.addEventListener("click", async event => {
-    if (preferred || event.defaultPrevented || event.button !== 0 ||
+    if (preferred || !recommendation || event.defaultPrevented || event.button !== 0 ||
         event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     if (downloadRequested) return;
-    if (recommendation) {
-      downloadRequested = true;
-      await recommendation;
-      downloadRequested = false;
-      if (preferred) {
-        preferred.link.click();
-        return;
-      }
-    }
-    if (choices.hidden) showChoices();
-    else hideChoices();
-  });
-  document.addEventListener("pointerdown", event => {
-    if (!choices.hidden && !button.contains(event.target) && !choices.contains(event.target)) hideChoices();
-  });
-  document.addEventListener("keydown", event => {
-    if (!choices.hidden && event.key === "Escape") {
-      hideChoices();
-      button.focus();
-    }
+    downloadRequested = true;
+    await recommendation;
+    downloadRequested = false;
+    if (preferred) preferred.link.click();
+    else location.assign(button.href);
   });
   for (const {link, filename} of downloads) link.download = filename;
 

@@ -29,6 +29,10 @@
         <span class="seal" aria-hidden="true">简</span>
         <span>Resume One <span class="brand-divider">/</span> 简里</span>
       </a>
+      <details class="mobile-menu" hidden>
+        <summary>菜单</summary>
+        <div class="mobile-menu-panel"></div>
+      </details>
       <nav aria-label="主导航">
         <a href="#editor">编辑体验</a>
         <a href="#themes">主题</a>
@@ -46,16 +50,16 @@
     <section class="hero frame" aria-labelledby="headline">
       <div class="hero-copy">
         <h1 id="headline"><span>把简历，</span><span>留在自己手里。</span></h1>
-        <p>在本机编辑 JSON Resume。改源码、在纸面写作、试穿主题，再从同一份简历导出。</p>
+        <p><span class="wide-copy">在本机编辑 JSON Resume。改源码、在纸面写作、试穿主题，再从同一份简历导出。</span><span class="compact-copy">在本机编辑 JSON Resume，试穿主题，从同一份简历导出。</span></p>
         <div class="hero-actions">
           <div class="hero-download-control">
             <a class="primary" id="hero-download" href="#download">
               <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.75v9m-3.5-3.5L10 12l3.5-3.75M3.5 12.75v3.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-3.5"/></svg>
-              <span>下载简里</span>
+              <span class="wide-copy">下载简里</span>
+              <span class="compact-copy">桌面版下载<small>macOS / Windows</small></span>
             </a>
-            <div id="hero-download-choices" aria-label="选择下载版本" role="group" hidden></div>
           </div>
-          <a class="text-link" href="#editor"><span>试用交互演示</span><span aria-hidden="true">↗</span></a>
+          <a class="text-link hero-demo-link" href="#editor"><span class="wide-copy">试用交互演示</span><span class="compact-copy">试用交互演示</span><span aria-hidden="true">↗</span></a>
         </div>
         <a class="hero-other-platforms" href="#download" hidden>选择其他平台</a>
       </div>
@@ -114,7 +118,7 @@
       <section id="editor" class="editor-demo frame chapter" aria-labelledby="editor-title">
         <div class="editor-intro" data-reveal>
           <h2 id="editor-title">一份简历，两种视图</h2>
-          <p>按 <kbd>⌘ + /</kbd> 或 <kbd>Ctrl + /</kbd> 在源码与预览间切换。左侧主题栏随视图收放，右侧模块栏留在原位。</p>
+          <p><span class="pointer-copy">按 <kbd>⌘ + /</kbd> 或 <kbd>Ctrl + /</kbd> 在源码与预览间切换。左侧主题栏随视图收放，右侧模块栏留在原位。</span><span class="touch-copy">点工作经历编辑，点 JSON 查看源码。</span></p>
           <div class="demo-guide" role="group" aria-label="选择演示">
             <button type="button" data-demo-step="source" aria-pressed="false">源码与预览</button>
             <button type="button" data-demo-step="paper" aria-pressed="true">纸面编辑</button>
@@ -236,9 +240,14 @@
                 <span>技能</span>
               </aside>
             </div>
-            <div class="demo-status" id="demo-state" role="status">网页演示 · 修改仅保存在本页</div>
+            <div class="demo-footer">
+              <div class="demo-status" id="demo-state" role="status">网页演示 · 修改仅保存在本页</div>
+              <details class="demo-mobile-modules" hidden>
+                <summary>模块</summary>
+              </details>
+            </div>
           </div>
-          <figcaption>网页版节选 · 在浏览器试改一行 JSON，或把鼠标移到工作经历上。</figcaption>
+          <figcaption><span class="pointer-copy">网页版节选 · 在浏览器试改一行 JSON，或把鼠标移到工作经历上。</span><span class="touch-copy">桌面版快捷键：<kbd>⌘ + /</kbd> 或 <kbd>Ctrl + /</kbd></span></figcaption>
         </figure>
       </section>
     </div>
@@ -246,7 +255,7 @@
     <section id="themes" class="theme-story workflow frame chapter" aria-labelledby="themes-title">
       <header class="section-lead" data-reveal>
         <h2 id="themes-title"><span>同一份内容，</span><span>换一种版式</span></h2>
-        <p>把鼠标移到主题上，简里用当前简历试穿。移开恢复，点击才应用。内容、字体和配色可以各自调整。</p>
+        <p><span class="pointer-copy">把鼠标移到主题上，简里用当前简历试穿。移开恢复，点击才应用。内容、字体和配色可以各自调整。</span><span class="touch-copy">轻点主题，立即换版。简历内容、字体和配色可以各自调整。</span></p>
       </header>
       <figure class="theme-motion" data-reveal>
         <div class="theme-stage">

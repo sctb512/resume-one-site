@@ -8,6 +8,7 @@ const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeChoices = [...document.querySelectorAll("[data-theme-choice]")];
 const english = root.lang === "en";
 const tr = (zh, en) => english ? en : zh;
+const touchInput = window.matchMedia("(hover: none)");
 const themeNames = english
   ? { zhibai: "White Space", qinghe: "Green Grain", moxu: "Ink Ledger" }
   : { zhibai: "知白", qinghe: "青禾", moxu: "墨序" };
@@ -141,7 +142,7 @@ function displayMode(mode) {
   displayForm(false);
   if (sourceMode) {
     highlight.scrollTop = source.scrollTop;
-    source.focus({ preventScroll: true });
+    if (!touchInput.matches) source.focus({ preventScroll: true });
   }
 }
 
@@ -219,11 +220,22 @@ const notes = {
   themes: tr("把鼠标移到知白、青禾或墨序上。移开恢复已选主题，点击后才应用。", "Hover over White Space, Green Grain or Ink Ledger. Move away to restore the selected theme, or click to keep it."),
 };
 
+const touchNotes = {
+  source: tr("改一个名字或职位，再点预览查看效果。", "Change a name or job title, then tap Preview to see the result."),
+  paper: tr("在工作经历的表单里修改职位，纸面会立即更新。", "Change the job title in the Experience form to see the page update."),
+  themes: tr("轻点知白、青禾或墨序，样张和页面配色会一起改变。", "Tap White Space, Green Grain or Ink Ledger to change the layout and page colors."),
+};
+
+function showDemoNote(step) {
+  note.textContent = (touchInput.matches ? touchNotes : notes)[step];
+}
+
+showDemoNote("paper");
 for (const button of steps) {
   button.addEventListener("click", () => {
     const step = button.dataset.demoStep;
     markActive(steps, button);
-    note.textContent = notes[step];
+    showDemoNote(step);
     displayMode(step === "source" ? "source" : "paper");
     if (step === "paper") {
       pinned = true;
@@ -239,7 +251,7 @@ for (const button of modeButtons) {
     const mode = button.dataset.demoMode;
     const step = mode === "source" ? "source" : "paper";
     markActive(steps, steps.find(choice => choice.dataset.demoStep === step));
-    note.textContent = notes[step];
+    showDemoNote(step);
     displayMode(mode);
   });
 }
@@ -279,6 +291,64 @@ source.addEventListener("scroll", () => { highlight.scrollTop = source.scrollTop
 readSource();
 
 const masthead = document.querySelector(".masthead");
+const mastheadInner = masthead.querySelector(".masthead-inner");
+const navigation = masthead.querySelector("nav");
+const mobileMenu = masthead.querySelector(".mobile-menu");
+const mobileMenuPanel = mobileMenu.querySelector(".mobile-menu-panel");
+const languagePicker = document.querySelector(".language-picker");
+const footer = languagePicker.parentElement;
+const workspace = editor.querySelector(".demo-workspace");
+const moduleRail = editor.querySelector(".demo-module-rail");
+const mobileModules = editor.querySelector(".demo-mobile-modules");
+const library = document.querySelector(".theme-library");
+const themePicker = library.querySelector(".site-theme-choices");
+const themeFigure = document.querySelector(".theme-motion");
+const heroDemo = document.querySelector(".hero-demo-link");
+const heroActions = heroDemo.parentElement;
+const compact = window.matchMedia("(max-width: 38rem)");
+const singleColumnThemes = window.matchMedia("(max-width: 49rem)");
+
+function syncCompactLayout() {
+  mobileMenu.open = mobileModules.open = false;
+  mobileMenu.hidden = mobileModules.hidden = !compact.matches;
+  if (compact.matches) {
+    mobileMenuPanel.append(navigation, languagePicker);
+    mobileModules.append(moduleRail);
+    heroActions.prepend(heroDemo);
+  } else {
+    mastheadInner.append(navigation);
+    footer.append(languagePicker);
+    workspace.append(moduleRail);
+    heroActions.append(heroDemo);
+  }
+}
+
+function positionThemePicker() {
+  (singleColumnThemes.matches ? themeFigure : library).prepend(themePicker);
+}
+
+compact.addEventListener("change", syncCompactLayout);
+singleColumnThemes.addEventListener("change", positionThemePicker);
+syncCompactLayout();
+positionThemePicker();
+
+navigation.addEventListener("click", event => {
+  if (event.target.closest("a")) mobileMenu.open = false;
+});
+const disclosures = [mobileMenu, mobileModules];
+document.addEventListener("pointerdown", event => {
+  for (const disclosure of disclosures) {
+    if (disclosure.open && !disclosure.contains(event.target)) disclosure.open = false;
+  }
+});
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  const disclosure = disclosures.find(item => item.open);
+  if (!disclosure) return;
+  disclosure.open = false;
+  disclosure.querySelector("summary").focus({ preventScroll: true });
+});
+
 const progressBar = masthead.querySelector(".reading-progress");
 const chapters = [...masthead.querySelectorAll('nav a[href^="#"], #nav-download')].map(link => ({
   link,

@@ -29,6 +29,10 @@
         <span class="seal" aria-hidden="true">简</span>
         <span>Resume One <span class="brand-divider">/</span> 简里</span>
       </a>
+      <details class="mobile-menu" hidden>
+        <summary>Menu</summary>
+        <div class="mobile-menu-panel"></div>
+      </details>
       <nav aria-label="Main navigation">
         <a href="#editor">Editor</a>
         <a href="#themes">Themes</a>
@@ -46,16 +50,16 @@
     <section class="hero frame" aria-labelledby="headline">
       <div class="hero-copy">
         <h1 id="headline"><span>Your résumé.</span> <span>Yours to keep.</span></h1>
-        <p>Edit JSON Resume on your own device. Write in JSON or on the page, try different layouts, and export from the same file.</p>
+        <p><span class="wide-copy">Edit JSON Resume on your own device. Write in JSON or on the page, try different layouts, and export from the same file.</span><span class="compact-copy">Edit JSON Resume locally, try different themes, and export from the same file.</span></p>
         <div class="hero-actions">
           <div class="hero-download-control">
             <a class="primary" id="hero-download" href="#download">
               <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.75v9m-3.5-3.5L10 12l3.5-3.75M3.5 12.75v3.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-3.5"/></svg>
-              <span>Download Resume One</span>
+              <span class="wide-copy">Download Resume One</span>
+              <span class="compact-copy">Desktop app<small>macOS / Windows</small></span>
             </a>
-            <div id="hero-download-choices" aria-label="Choose a download" role="group" hidden></div>
           </div>
-          <a class="text-link" href="#editor"><span>Try the interactive demo</span><span aria-hidden="true">↗</span></a>
+          <a class="text-link hero-demo-link" href="#editor"><span class="wide-copy">Try the interactive demo</span><span class="compact-copy">Try the demo</span><span aria-hidden="true">↗</span></a>
         </div>
         <a class="hero-other-platforms" href="#download" hidden>Other platforms</a>
       </div>
@@ -114,7 +118,7 @@
       <section id="editor" class="editor-demo frame chapter" aria-labelledby="editor-title">
         <div class="editor-intro" data-reveal>
           <h2 id="editor-title">One résumé, two views</h2>
-          <p>Press <kbd>⌘ + /</kbd> or <kbd>Ctrl + /</kbd> to switch between source and preview. The theme rail slides away while the sections panel stays in place.</p>
+          <p><span class="pointer-copy">Press <kbd>⌘ + /</kbd> or <kbd>Ctrl + /</kbd> to switch between source and preview. The theme rail slides away while the sections panel stays in place.</span><span class="touch-copy">Tap Experience to edit, or tap JSON to see the source.</span></p>
           <div class="demo-guide" role="group" aria-label="Choose a demo">
             <button type="button" data-demo-step="source" aria-pressed="false">Source and preview</button>
             <button type="button" data-demo-step="paper" aria-pressed="true">Edit on the page</button>
@@ -236,9 +240,14 @@
                 <span>Skills</span>
               </aside>
             </div>
-            <div class="demo-status" id="demo-state" role="status">Web demo · Changes stay on this page</div>
+            <div class="demo-footer">
+              <div class="demo-status" id="demo-state" role="status">Web demo · Changes stay on this page</div>
+              <details class="demo-mobile-modules" hidden>
+                <summary>Sections</summary>
+              </details>
+            </div>
           </div>
-          <figcaption>Try changing a line of JSON or hover over Experience in this browser demo.</figcaption>
+          <figcaption><span class="pointer-copy">Try changing a line of JSON or hover over Experience in this browser demo.</span><span class="touch-copy">Desktop shortcut: <kbd>⌘ + /</kbd> or <kbd>Ctrl + /</kbd></span></figcaption>
         </figure>
       </section>
     </div>
@@ -246,7 +255,7 @@
     <section id="themes" class="theme-story workflow frame chapter" aria-labelledby="themes-title">
       <header class="section-lead" data-reveal>
         <h2 id="themes-title"><span>The same content.</span> <span>A different layout.</span></h2>
-        <p>Hover over a theme to preview it with your current résumé. Move away to restore the selected theme, or click to apply. Adjust content, fonts and colors independently.</p>
+        <p><span class="pointer-copy">Hover over a theme to preview it with your current résumé. Move away to restore the selected theme, or click to apply. Adjust content, fonts and colors independently.</span><span class="touch-copy">Tap a theme to change the layout. Adjust the content, fonts and colors independently.</span></p>
       </header>
       <figure class="theme-motion" data-reveal>
         <div class="theme-stage">
