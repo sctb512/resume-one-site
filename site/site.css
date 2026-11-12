@@ -764,11 +764,20 @@ kbd { font-size: .9em; white-space: nowrap; }
 
 .download-section .hero-actions { gap: .65rem; }
 .download-section .primary { min-width: 0; padding-inline: 1.1rem; font-size: 1.04rem; }
+.download-section .primary { flex-direction: column; }
+.download-section .primary small { font: 500 .76rem/1.3 var(--body); }
+.download-section .primary[data-recommended] { outline: 2px solid var(--seal); outline-offset: 3px; }
+.download-section .download-release { font-size: .88rem; }
 .download-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: .85rem; }
 
 .language-picker {
   display: inline-flex;
   align-items: center;
+}
+
+@media (min-width: 49.01rem) {
+  .hero { padding-top: clamp(2.4rem, 4.3vw, 3.65rem); }
+  .hero .preview { margin-top: clamp(1.7rem, 2.9vw, 2.65rem); }
 }
 .language-picker select {
   max-width: 100%;

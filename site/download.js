@@ -4,11 +4,17 @@
   const button = document.querySelector("#hero-download");
   const navLink = document.querySelector("#nav-download");
   const platformPicker = document.querySelector(".hero-other-platforms");
+  const releaseInfo = document.querySelector("#download-release");
   const downloads = [...document.querySelectorAll("[data-download]")].map(link => ({
     link,
     platform: link.dataset.download,
     filename: new URL(link.href).pathname.split("/").pop(),
+    label: link.getAttribute("aria-label"),
+    size: Number(link.dataset.size),
+    detail: document.createElement("small"),
   }));
+  let releaseTag = new URL(downloads[0].link.href).pathname.split("/").at(-2);
+  let preRelease = releaseTag.includes("-");
   const hints = navigator.userAgentData;
   const os = hints?.platform || navigator.platform;
   const mobile = hints?.mobile || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -27,6 +33,19 @@
       else link.removeAttribute("download");
     }
     platformPicker.hidden = !preferred;
+    for (const item of downloads) {
+      const recommended = item === preferred;
+      item.link.toggleAttribute("data-recommended", recommended);
+      const details = [
+        recommended ? releaseInfo.dataset.recommendedLabel : "",
+        item.size > 0 ? `${Math.round(item.size / 1_000_000)} MB` : "",
+      ].filter(Boolean);
+      item.detail.textContent = details.join(" · ");
+      item.detail.hidden = !details.length;
+      item.link.setAttribute("aria-label", [item.label, ...details].join(" · "));
+    }
+    releaseInfo.textContent = preRelease ? `${releaseInfo.dataset.previewLabel} · ${releaseTag}` : releaseTag;
+    releaseInfo.hidden = false;
   }
 
   function selectArchitecture(architecture) {
@@ -62,6 +81,10 @@
       recommendation = null;
     });
   }
+  for (const item of downloads) {
+    item.link.download = item.filename;
+    item.link.append(item.detail);
+  }
   selectArchitecture(legacyArchitecture());
 
   let downloadRequested = false;
@@ -76,8 +99,6 @@
     if (preferred) preferred.link.click();
     else location.assign(button.href);
   });
-  for (const {link, filename} of downloads) link.download = filename;
-
   const releaseBase = "https://github.com/sctb512/resume-one/releases/download/";
   fetch("https://api.github.com/repos/sctb512/resume-one/releases?per_page=10", {
     credentials: "omit",
@@ -94,7 +115,14 @@
     );
     const release = available.find(item => !item.prerelease) ?? available[0];
     if (!release) return;
-    for (const { link, filename } of downloads) link.href = `${releaseBase}${release.tag_name}/${filename}`;
+    releaseTag = release.tag_name;
+    preRelease = release.prerelease;
+    for (const item of downloads) {
+      const href = `${releaseBase}${releaseTag}/${item.filename}`;
+      const asset = release.assets.find(asset => asset.browser_download_url === href);
+      item.link.href = href;
+      item.size = Number.isFinite(asset?.size) ? asset.size : 0;
+    }
     updateButton();
   }).catch(() => {});
 })();

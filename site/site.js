@@ -332,6 +332,18 @@ singleColumnThemes.addEventListener("change", positionThemePicker);
 syncCompactLayout();
 positionThemePicker();
 
+heroDemo.addEventListener("click", event => {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  if (location.hash !== heroDemo.hash) history.pushState(null, "", heroDemo.hash);
+  steps.find(button => button.dataset.demoStep === "paper").click();
+  document.querySelector(heroDemo.hash).scrollIntoView();
+  if (!touchInput.matches) requestAnimationFrame(async () => {
+    await Promise.allSettled(form.getAnimations().map(animation => animation.finished));
+    if (!form.inert && document.activeElement === heroDemo) job.focus({ preventScroll: true });
+  });
+});
+
 navigation.addEventListener("click", event => {
   if (event.target.closest("a")) mobileMenu.open = false;
 });
