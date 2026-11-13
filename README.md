@@ -10,6 +10,8 @@ The main download button uses the browser’s platform and processor information
 
 The site follows the browser’s language preference on first visit. Use the footer picker to choose Simplified Chinese, English, or the browser default. Each language has its own sample JSON and PDF excerpts, generated with the same version of the app.
 
+The published pages and assets live in [`site/`](./site/). Build checks and asset generators live in [`tools/`](./tools/).
+
 ## Local preview
 
 ```sh
