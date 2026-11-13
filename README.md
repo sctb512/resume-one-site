@@ -1,16 +1,16 @@
-# 简里 · 项目官网
+# Resume One Website
 
-**简体中文** · [English](./README.en.md)
+**English** · [简体中文](./README.zh-CN.md)
 
-[访问官网](https://sctb512.github.io/resume-one-site/) · [应用仓库](https://github.com/sctb512/resume-one) · [主题仓库](https://github.com/sctb512/resume-one-themes)
+[Visit the website](https://sctb512.github.io/resume-one-site/en.html?lang=en) · [Desktop app](https://github.com/sctb512/resume-one) · [Community themes](https://github.com/sctb512/resume-one-themes)
 
-这是简里的独立静态主页。首屏和主题区展示知白、青禾和墨序的 PDF 首页节选，由应用 CLI 导出仓库中的示例简历生成。编辑体验区使用同一份示例的数据节选，可修改 JSON、使用纸面表单并试穿主题。三处主题选择同步切换纸面和网站配色。悬停会临时试穿，点击会在浏览器记住选择。主题区可手动播放由实际导出图制作的动图，再次选择主题会回到样张。站点的显示字体是 Noto Serif SC 子集，许可位于 `site/assets/OFL-Jianli-Display.txt`。
+This is the source for the bilingual Resume One website. The hero and theme gallery use excerpts from real PDF exports of the sample résumés, styled with White Space, Green Grain, and Ink Ledger. The editor demo uses the same sample data and lets you edit JSON, change fields on the page, and try themes. All three theme pickers update the previews and the site palette together. Hover to preview a theme or click to remember it. The gallery also includes a short animation made from the exports. The display font is a subset of Noto Serif SC. See its [font license](./site/assets/OFL-Jianli-Display.txt).
 
-首页的「下载简里」会根据浏览器提供的系统和处理器信息直接下载对应版本。无法区分 Mac 处理器时下载通用版。无法匹配平台时，按钮会跳转到下载区的版本列表。
+The main download button uses the browser’s platform and processor information to select an archive. It uses the macOS Universal build when the Mac processor cannot be determined. Visitors without a matching download are taken to the full list.
 
-首页会根据浏览器首选语言打开简体中文或英文。可在页脚选择「跟随浏览器」「简体中文」或「English」，偏好在浏览器中保留。两个语言页面使用独立的示例 JSON 和同版本的真实 PDF 节选。
+The site follows the browser’s language preference on first visit. Use the footer picker to choose Simplified Chinese, English, or the browser default. Each language has its own sample JSON and PDF excerpts, generated with the same version of the app.
 
-## 本地预览
+## Local preview
 
 ```sh
 node --check site/language.js
@@ -20,10 +20,10 @@ python3 tools/build.py
 python3 -m http.server 4173 --bind 127.0.0.1 --directory site
 ```
 
-在浏览器打开 `http://127.0.0.1:4173/`。纯静态文件也可以部署到子路径。
+Open `http://127.0.0.1:4173/` in your browser. The site can also be hosted under a subpath.
 
-重新生成主题切换动图时，安装 Pillow 后运行 `python3 tools/theme-motion.py ../resume_one/assets/fonts`。发布构建使用已提交的 GIF 和静态封面。
+To regenerate the theme animation, install Pillow and run `python3 tools/theme-motion.py ../resume_one/assets/fonts`. The production build uses the committed GIF and still images.
 
-## 自动发布
+## Deployment
 
-在该仓库的 **Settings → Pages** 选择 **GitHub Actions**。推送到 `main` 会先检查链接和静态资源，再部署到 [项目主页](https://sctb512.github.io/resume-one-site/)。PR 只执行构建验证。应用下载与 CLI 文档由 [应用仓库](https://github.com/sctb512/resume-one) 提供，社区主题由 [主题仓库](https://github.com/sctb512/resume-one-themes) 发布。
+In **Settings → Pages**, select **GitHub Actions** as the source. Pushes to `main` validate the links and static assets, then deploy the website. Pull requests run the build checks. The [app repository](https://github.com/sctb512/resume-one) provides downloads and CLI documentation, and the [theme repository](https://github.com/sctb512/resume-one-themes) publishes community themes.
