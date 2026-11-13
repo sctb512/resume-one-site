@@ -2,7 +2,7 @@
 
 [English](./README.md) · **简体中文**
 
-[访问官网](https://sctb512.github.io/resume-one-site/) · [应用仓库](https://github.com/sctb512/resume-one) · [主题仓库](https://github.com/sctb512/resume-one-themes)
+[访问官网](https://sctb512.github.io/resume-one-site/?lang=zh-CN) · [应用仓库](https://github.com/sctb512/resume-one/blob/main/README.zh-CN.md) · [主题仓库](https://github.com/sctb512/resume-one-themes/blob/main/README.zh-CN.md)
 
 这是简里的独立静态主页。首屏和主题区展示知白、青禾和墨序的 PDF 首页节选，由应用 CLI 导出仓库中的示例简历生成。编辑体验区使用同一份示例的数据节选，可修改 JSON、使用纸面表单并试穿主题。三处主题选择同步切换纸面和网站配色。悬停会临时试穿，点击会在浏览器记住选择。主题区可手动播放由实际导出图制作的动图，再次选择主题会回到样张。站点的显示字体是 Noto Serif SC 子集，许可位于 `site/assets/OFL-Jianli-Display.txt`。
 
@@ -28,4 +28,4 @@ python3 -m http.server 4173 --bind 127.0.0.1 --directory site
 
 ## 自动发布
 
-在该仓库的 **Settings → Pages** 选择 **GitHub Actions**。推送到 `main` 会先检查链接和静态资源，再部署到 [项目主页](https://sctb512.github.io/resume-one-site/)。PR 只执行构建验证。应用下载与 CLI 文档由 [应用仓库](https://github.com/sctb512/resume-one) 提供，社区主题由 [主题仓库](https://github.com/sctb512/resume-one-themes) 发布。
+在该仓库的 **Settings → Pages** 选择 **GitHub Actions**。推送到 `main` 会先检查链接和静态资源，再部署到 [项目主页](https://sctb512.github.io/resume-one-site/?lang=zh-CN)。PR 只执行构建验证。应用下载与 CLI 文档由 [应用仓库](https://github.com/sctb512/resume-one/blob/main/README.zh-CN.md) 提供，社区主题由 [主题仓库](https://github.com/sctb512/resume-one-themes/blob/main/README.zh-CN.md) 发布。
